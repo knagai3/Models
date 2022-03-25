@@ -2,7 +2,7 @@
 % Written by: Kana Nagai 2022/3/18
 
 %% Setup
-clc;clear;beep off; close all
+clc;clear;beep off;close all
 addpath('../Models/function');
 set(0, 'DefaultLineLineWidth', 2);
 set(0,'defaultAxesFontSize',15);
@@ -13,11 +13,11 @@ IMUType = 'STIM300';
 
 %% INS/WSS/VDC Error Drift with EKF ***************************************
 
-% perfect initial Pbar
-Pbar = blkdiag(zeros(15), 1e+6*eye(2));
-
 % mesurement time = (frequency)(sec)
 m = 20*120;
+
+% perfect initial Pbar
+Pbar = blkdiag(zeros(15), 1e+6*eye(2));
 
 % Dynamic model (constant velocity)
 [phi,GamaW,Qo,~,~,gamaWgamaT] = getDynamicSS(IMUType);
@@ -37,7 +37,7 @@ U = GamaW*Uo*GammaV';
 phic = phi-U/R*H1;
 Qc = Q-U/R*U';
 
-% the EKF
+%% the EKF
 
 GPS_update = dt_gps/dt_ins;
 
@@ -63,7 +63,6 @@ end
 
 %% plot *******************************************************************
 %%
-% plot everything
 
 figure
 plot(1:m,save_Pbar)

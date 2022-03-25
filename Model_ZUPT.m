@@ -2,7 +2,7 @@
 % Written by: Kana Nagai 2022/3/18
 
 %% Setup
-clc;clear;beep off; close all
+clc;clear;beep off;close all
 addpath('../Models/function');
 set(0, 'DefaultLineLineWidth', 2);
 set(0,'defaultAxesFontSize',15);
@@ -13,16 +13,15 @@ IMUType = 'STIM300';
 
 %% INS/ZUPT Error Drift with EKF ******************************************
 
-% INS setting
-[tau_a, tau_g, sqrtQa, sqrtQg, sig_na, sig_ng, sig_ba0, sig_bg0] = inputIMUType(IMUType);
-
 % mesurement time = frequency*time steps
 m = 20*20;
 
 % perfect initial Pbar
 Pbar = zeros(15);
- 
-% EKF error estimation
+
+% INS setting
+[tau_a, tau_g, sqrtQa, sqrtQg, sig_na, sig_ng, sig_ba0, sig_bg0] = inputIMUType(IMUType);
+
 % Dynamic model (constant velocity)
 [phi,gamaWgamaT] = getGNSS_Dynamic(tau_a,tau_g,sig_na,sig_ng,sqrtQa,sqrtQg);
 
@@ -35,7 +34,9 @@ V = 1e-3^2*eye(3);
 
 % update time
 t_up = 15;
-%%
+
+%% the EKF
+
 for i = 1:m
 
 save_Pbar(i,1) = sqrt(Pbar(1,1));
@@ -54,7 +55,6 @@ end
 
 %% plot *******************************************************************
 %%
-% Plot ZUPT
 
 figure
 plot(1:m,save_Pbar)

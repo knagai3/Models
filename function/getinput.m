@@ -31,10 +31,10 @@ dt_ins = 1/20;
 % GNSS measurement sampling rate [s]
 dt_gps = 1/2;
 % GPS start time
-UTC_time = [2020 7 1 0 00 00];
+UTC_time = [2020 7 1 6 00 00];
 
 % time for initalization [s]
-tG = 60*20;
+tG = 60*15;
 
 % time for alighnment [s]
 tI = 30;

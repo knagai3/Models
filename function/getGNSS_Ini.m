@@ -15,7 +15,7 @@ sub_sort_constellation
     if i == 1
         
     Pbar = getIniKnow(nSVs, IMUType, num_con);
-    
+       
     else
     
         if length(prn_both1)~=length(prn_old1) || length(prn_both1)~=length(prn_temp1)
@@ -35,6 +35,7 @@ sub_sort_constellation
         end
         
     end
+    
 %% 
 % count nSVs
 sub_count_nSVs
@@ -52,6 +53,7 @@ sub_count_nSVs
     for k = 1:dt_gps/dt_ins  
 
         save0(i,1) = sqrt(Pbar(1,1));
+        save0(i,2) = sqrt(Pbar(2,2));        
     
         if mod(k,dt_gps/dt_ins) == 0 && nSVs~=0
         H = HH;

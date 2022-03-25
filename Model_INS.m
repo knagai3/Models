@@ -11,9 +11,9 @@ set(0,'defaultAxesFontSize',15);
 getinput
 IMUType = 'STIM300';
 
-%% IMU Error Drift with EKF
+%% IMU Error Drift with the EKF
 
-% mesurement steps (INS 20Hz, 1 hr)
+% measurement steps (INS 20Hz, 1 hr)
 m = 20*60*60;
 
 % perfect initial Pbar
@@ -25,7 +25,7 @@ Pbar = zeros(15);
 % Dynamic model (constant velocity)
 [phi,gamaWgamaT] = getGNSS_Dynamic(tau_a,tau_g,sig_na,sig_ng,sqrtQa,sqrtQg);
 
-% the EKF
+%% the EKF
     for i = 1:m
     
         % save position data

@@ -13,7 +13,7 @@ function [vis_alm, time_index] = getALM(GNSS)
 getinput
 
 % set start and end at UTC time
-[t_start, t_end] = getsimtime(UTC_time, tG, tI, tS);
+[t_start, t_end] = getsimtime(UTC_time, tG);
 
 % change from the UTC time to GPS time
 start_gps = utc2gps(t_start);
