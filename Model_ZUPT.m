@@ -17,18 +17,18 @@ IMUType = 'STIM300';
 m = 20*20;
 
 % perfect initial Pbar
-Pbar = zeros(15);
+Pbar = zeros(17);
 
 % INS setting
 [tau_a, tau_g, sqrtQa, sqrtQg, sig_na, sig_ng, sig_ba0, sig_bg0] = inputIMUType(IMUType);
 
 % Dynamic model (constant velocity)
-[phi,gamaWgamaT] = getGNSS_Dynamic(tau_a,tau_g,sig_na,sig_ng,sqrtQa,sqrtQg);
+[phi, gamaWgamaT, ~, ~] = getGNSS_Dynamic(zeros(1,12), IMUType, 0, 0);
 
 % ZUPD measurment model        
 bRn = eye(3);
 v_b = [0;0;0];
-H(1:3,:) = [zeros(3,3) bRn skew(v_b) zeros(3,6)];
+H(1:3,:) = [zeros(3,3) bRn skew(v_b) zeros(3,8)];
 % violation error
 V = 1e-3^2*eye(3);
 

@@ -1,17 +1,28 @@
- function [Fn, Gu] = getIMUModel(k)
+ function [Fn, Gu] = getIMUModel(input)
 
-% *************************************************************************
-%   Generates nominal IMU data including specific force in B
-%   frame and body angular rate in B frame.
-% *************************************************************************
+% -------------------------------------------------------------------------
+%
+% Generates nominal IMU dynamic model including specific force in B
+% frame and angular rate in B frame.
+%
+% This generate the IMU data as the input when a bus drives on State St. 
+% The data is a 9 coloumn matrix with each row representing a reading of the IMU.
+%
+% input = [0 0 0 0 0 0 0 0 0 0 0 0]
+% load('motion_circle.mat')
+% load('motion_line.mat')
+% load('motion_z.mat')
+%
+% -------------------------------------------------------------------------
 
 getinput
 
-%load('motion_circle.mat')
-%load('motion_line.mat')
-load('motion_z.mat')
+v_b = input(1:3)';
+a_b = input(4:6)';
+E_n = input(7:9)';
+Edot_n = input(10:12)';
 
-[nRb, bRn, nRe, Q_be] = getTransfermatrix(E_n(:,k), R_llh);
+[nRb, bRn, nRe, Q_be] = getTransfermatrix(E_n, R_llh);
 
 % Earth rotation rate [rad/s] in NED frame
 w_ie_n = nRe*w_ie_e;
@@ -21,20 +32,18 @@ w_ie_n = nRe*w_ie_e;
 % *************************************************************************
 
 % specific force input in Body frame
-fs_b = a_b(:,k) + bRn*cross(2*w_ie_n, nRb*v_b(:,k))-bRn*g_n;
+fs_b = a_b + bRn*cross(2*w_ie_n, nRb*v_b)-bRn*g_n;
 
 % angler velocity input in Body frame
-w_ib_b = Q_be*Edot_n(:,k) + bRn*w_ie_n;
+w_ib_b = Q_be*Edot_n + bRn*w_ie_n;
 
 % *************************************************************************
 % Fn and Gu parameters
 % *************************************************************************
 
-Gp = -g_n /R_n*[1 0 0; 0 1 0; 0 0 2];
-
 ss = w_ib_b - bRn*w_ie_n;
 
-[dR_nb_dE, dQ_be_inv_dE] = getDerivativeMatrices(E_n(:,k));
+[dR_nb_dE, dQ_be_inv_dE] = getDerivativeMatrices(E_n);
 
 Ks = blkdiag(ss', ss', ss')*dQ_be_inv_dE + ...
      blkdiag(w_ie_n', w_ie_n', w_ie_n')*dR_nb_dE;
@@ -44,7 +53,7 @@ Ks = blkdiag(ss', ss', ss')*dQ_be_inv_dE + ...
 % ************************************************************************* 
 
 Fn = [zeros(3) eye(3) zeros(3);...
-      Gp -2*skew(w_ie_n) nRb*skew(fs_b);...
+      zeros(3) -2*skew(w_ie_n) nRb*skew(fs_b);...
       zeros(3) zeros(3) Ks];
 
 Gu = [zeros(3) zeros(3) ;...

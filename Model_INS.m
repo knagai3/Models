@@ -17,13 +17,13 @@ IMUType = 'STIM300';
 m = 20*60*60;
 
 % perfect initial Pbar
-Pbar = zeros(15);
+Pbar = zeros(17);
 
 % INS specification
 [tau_a, tau_g, sqrtQa, sqrtQg, sig_na, sig_ng, sig_ba0, sig_bg0] = inputIMUType(IMUType);
  
 % Dynamic model (constant velocity)
-[phi,gamaWgamaT] = getGNSS_Dynamic(tau_a,tau_g,sig_na,sig_ng,sqrtQa,sqrtQg);
+[phi, gamaWgamaT, GamaW, Wc] = getGNSS_Dynamic(zeros(1,12), IMUType, 0, 0);
 
 %% the EKF
     for i = 1:m

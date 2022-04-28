@@ -1,40 +1,51 @@
-% *************************************************************************
-% handle satellite chagne for GAL
-% *************************************************************************
+
+% -------------------------------------------------------------------------
+% - handle satellite change for each constellation
+% - judge the satellite is whetehr in or out
+% -------------------------------------------------------------------------
 
 %% count number of satellites
 
-temp_prn_old = prn_old3;
-temp_prn_temp = prn_temp3;
-prn_both3 = intersect(prn_old3, prn_temp3);
-temp_prn_both = prn_both3;
-
-nSV_GPS = length(prn_temp1);
-nSV_GLO = length(prn_temp2);
-nSV_BEI = length(prn_old4);
-
-if length(prn_temp1)<2
-nSV_GPS = 0;
-end
-
-if length(prn_temp2)<2
-nSV_GLO = 0;
-end
-
-if length(prn_old4)<2
-nSV_BEI = 0;
-end
+[temp_prn_old,temp_prn_temp,temp_prn_both,nSV_GPS,nSV_GLO,nSV_GAL,nSV_BEI] = ...
+           count_satellites(prn_old3, prn_temp3, prn_temp1, prn_temp2, prn_old3, prn_old4);
 
 %% satellite out
 
-if length(prn_both3)<length(prn_old3)
-sub_GAL_out
-clear nSV_GAL nSV_GNSS    
+if length(temp_prn_both)<length(temp_prn_old)
+
+    if length(temp_prn_both)<2
+    sub_GAL_constellation_out
+    else
+    sub_GAL_satellite_out
+    end
+
 end
 
 %% satellite in
 
-if length(prn_both3)<length(prn_temp3)
-sub_GAL_in
-clear temp_prn_old temp_prn_temp temp_prn_both nSV_BEI nSV_GNSS
+if length(temp_prn_both)<length(temp_prn_temp)
+    
+    if length(temp_prn_both)<2
+    sub_GAL_constellation_in
+    else
+    sub_GAL_satellite_in
+    end
+end
+
+clear temp_prn_old temp_prn_temp temp_prn_both nSV_GPS nSV_GLO nSV_GAL nSV_BEI nSV_GNSS
+
+%% function
+
+function [temp_prn_old,temp_prn_temp,temp_prn_both,nSV_GPS,nSV_GLO,nSV_GAL,nSV_BEI] = ...
+                count_satellites(prn_old, prn_temp, GPS, GLO, GAL, BEI)
+
+temp_prn_old = prn_old;
+temp_prn_temp = prn_temp;
+temp_prn_both = intersect(temp_prn_old, temp_prn_temp);
+
+nSV_GPS = length(GPS);
+nSV_GLO = length(GLO);
+nSV_GAL = length(GAL);
+nSV_BEI = length(BEI);
+
 end

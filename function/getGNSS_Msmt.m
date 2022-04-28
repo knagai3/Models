@@ -91,7 +91,7 @@ Gs = [Gs;Gs];
 M = blkdiag(m,m);
 F = [F; zeros(nSVs-num_con)];
 
-HH  = [Gs, zeros(size(Gs,1),12), M, F];
+HH  = [Gs, zeros(size(Gs,1),12+2), M, F];
 
 % initialize thermal noise covariace matrix
 V_sd_carr_th = eye(nSVs)*sig_carr_th^2;
@@ -104,3 +104,4 @@ V_dd_code_th = m*V_sd_code_th*m';
 
 % Combine code&carrier diagonal terms of covariances diagonally 
 V_rhophi = blkdiag(V_dd_carr_th,V_dd_code_th);
+

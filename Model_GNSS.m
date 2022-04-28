@@ -1,7 +1,3 @@
-% GNSS EKF measurement
-% Written by: Kana Nagai 2022/3/20
-
-
 %% Setup
 clc;clear;beep off;close all
 addpath('../Models/constell');
@@ -21,16 +17,20 @@ IMUType = 'STIM300';
 [vis_alm, time_index] = getALM(1);
 
 % get initialization
-[Pbar, save0] = getGNSS_Ini(vis_alm,time_index,IMUType);
+[Pbar, save0] = getGNSS_Ini(IMUType,vis_alm,time_index);
 
 % get alignmnet
-[Pbar, save1] = getGNSS_Ali(Pbar,vis_alm,time_index,IMUType);
+[Pbar, save1] = getGNSS_Ali(Pbar,IMUType,vis_alm,time_index);
 
 
 %% Plot *******************************************************************
 
-figure
-save_all = [save0;save1];
+figure()
+save_all = [save0(:,1:2);save1(:,1:2)];
 plot(1:length(save_all),save_all);
 ylim([0,0.1])
+
+figure()
+save_all = [save0(:,3);save1(:,3)];
+plot(1:length(save_all),save_all);
 
